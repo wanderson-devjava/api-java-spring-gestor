@@ -22,7 +22,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import com.stationone.api.entities.Endereco;
 import com.stationone.api.enums.Perfil;
 
 @Entity
@@ -44,7 +43,10 @@ public class Empresa implements Serializable {
 	@Column(name = "cnpj", nullable = false)
 	private String cnpj;
 
-	@Column(name = "data_criacao", nullable = false)
+	@Column(name = "email", nullable = false)
+	private String email;
+
+	@Column(name = "data_criacao")
 	private Date dataCriacao;
 
 	@Column(name = "data_atualizacao", nullable = false)
@@ -60,18 +62,23 @@ public class Empresa implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "PERFIS")
 	private Set<Integer> perfis = new HashSet<>();
+	
+	//@OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	//private List<Pessoa> pessoas = new ArrayList<>();
+	
+	private Date transposicao;
 
 	public Empresa() {
-
 		addPerfil(Perfil.ADMINISTRADOR);
 	}
 
-	public Empresa(Long id, String razaoSocial, String nomeFantasia , String cnpj) {
+	public Empresa(Long id, String razaoSocial, String nomeFantasia, String cnpj, String email) {
 		super();
 		this.id = id;
 		this.razaoSocial = razaoSocial;
 		this.nomeFantasia = nomeFantasia;
 		this.cnpj = cnpj;
+		this.email = email;
 		addPerfil(Perfil.ADMINISTRADOR);
 	}
 
@@ -105,6 +112,14 @@ public class Empresa implements Serializable {
 
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Set<Perfil> getPerfis() {
@@ -147,16 +162,34 @@ public class Empresa implements Serializable {
 		this.dataAtualizacao = dataAtualizacao;
 	}
 
+	public Date getTransposicao() {
+		return transposicao;
+	}
+
+	public void setTransposicao(Date transposicao) {
+		this.transposicao = transposicao;
+	}
+
 	@PreUpdate
 	public void preUpdate() {
 		dataAtualizacao = new Date();
+		dataCriacao = transposicao;
+		
 	}
 
 	@PrePersist
 	public void prePersist() {
 		final Date atual = new Date();
-		dataCriacao = atual;
 		dataAtualizacao = atual;
+		dataCriacao = atual;
+		
+		if(dataCriacao == null) {
+			dataCriacao = atual;
+			transposicao = dataCriacao;
+		} else {
+			transposicao = dataCriacao;
+		}
+		
 	}
 
 }
