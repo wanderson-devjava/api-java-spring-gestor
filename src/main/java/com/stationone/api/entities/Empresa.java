@@ -22,6 +22,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stationone.api.enums.Perfil;
 
 @Entity
@@ -45,6 +46,10 @@ public class Empresa implements Serializable {
 
 	@Column(name = "email", nullable = false)
 	private String email;
+	
+	@JsonIgnore
+	@Column(name = "senha", nullable = false)
+	private String senha;
 
 	@Column(name = "data_criacao")
 	private Date dataCriacao;
@@ -72,13 +77,14 @@ public class Empresa implements Serializable {
 		addPerfil(Perfil.ADMINISTRADOR);
 	}
 
-	public Empresa(Long id, String razaoSocial, String nomeFantasia, String cnpj, String email) {
+	public Empresa(Long id, String razaoSocial, String nomeFantasia, String cnpj, String email, String senha) {
 		super();
 		this.id = id;
 		this.razaoSocial = razaoSocial;
 		this.nomeFantasia = nomeFantasia;
 		this.cnpj = cnpj;
 		this.email = email;
+		this.senha = senha;
 		addPerfil(Perfil.ADMINISTRADOR);
 	}
 
@@ -120,6 +126,14 @@ public class Empresa implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Set<Perfil> getPerfis() {

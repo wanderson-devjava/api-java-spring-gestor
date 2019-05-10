@@ -15,5 +15,8 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long>{
 	Empresa findByCnpj(String cnpj);
 	
 	@Transactional(readOnly = true)
+	Empresa findByEmail(String email);
+	
+	@Transactional(readOnly = true)
 	Optional<Empresa> findById(Long id);
 }

@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.stationone.api.dto.EmpresaDTO;
@@ -24,6 +25,9 @@ import com.stationone.api.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class EmpresaService {
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 
 	@Autowired
 	private EmpresaRepository repo;
@@ -73,11 +77,11 @@ public class EmpresaService {
 	}
 	
 	public Empresa fromDTO(EmpresaDTO objDTO) {
-		return new Empresa(objDTO.getId(), objDTO.getRazaoSocial(), objDTO.getNomeFantasia(), objDTO.getCnpj(), objDTO.getEmail());
+		return new Empresa(objDTO.getId(), objDTO.getRazaoSocial(), objDTO.getNomeFantasia(), objDTO.getCnpj(), objDTO.getEmail(), null);
 	}
 	
 	public Empresa fromDTO(EmpresaNewDTO objDTO) {
-		Empresa empresa = new Empresa(null, objDTO.getRazaoSocial(), objDTO.getNomeFantasia(), objDTO.getCnpj(), objDTO.getEmail());
+		Empresa empresa = new Empresa(null, objDTO.getRazaoSocial(), objDTO.getNomeFantasia(), objDTO.getCnpj(), objDTO.getEmail(), pe.encode(objDTO.getSenha()));
 		Cidade cidade = new Cidade(objDTO.getCidadeId(), null, null);
 		Endereco endereco = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(), objDTO.getBairro(), objDTO.getCep(), empresa, cidade);
 		
