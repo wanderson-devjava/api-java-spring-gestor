@@ -3,7 +3,8 @@ package com.stationone.api.enums;
 public enum Perfil {
 	
 	ADMINISTRADOR(1, "ROLE_ADMIN"),
-	USUARIO(2, "ROLE_USUARIO");
+	USUARIO(2, "ROLE_USUARIO"),
+	GESTOR(3, "ROLE_GESTOR");
 	
 	private int cod;
 	private String descricao;
